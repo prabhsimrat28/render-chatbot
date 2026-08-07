@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: agentic-chatbot
+    runtime: docker
+    plan: free
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: WEATHER_API_KEY
+        sync: false
+      - key: VANTAGE_API_KEY
+        sync: false
+      - key: JINA_API_KEY
+        sync: false
+      - key: LANGCHAIN_API_KEY
+        sync: false
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_ENDPOINT
+        value: "https://api.smith.langchain.com"
+      - key: LANGCHAIN_PROJECT
+        value: "My-Chatbot-Project"

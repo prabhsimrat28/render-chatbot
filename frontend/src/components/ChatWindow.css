@@ -1,0 +1,91 @@
+.chat-window {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  background: transparent;
+}
+
+.messages-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-list {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.empty-state {
+  margin: auto;
+  text-align: center;
+  animation: fadeIn var(--transition-smooth);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: pulse 3s infinite;
+}
+
+.empty-state h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, var(--text-white), var(--text-gray));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+}
+
+.tool-pill-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: -12px;
+  margin-bottom: 12px;
+  padding-left: 48px; /* Align with assistant message content */
+}
+
+.tool-pill {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear, fadeIn var(--transition-smooth);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  color: var(--text-gray);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-color);
+  backdrop-filter: var(--panel-blur);
+}
+
+.tool-icon {
+  font-size: 14px;
+}
+
+.input-area {
+  padding: 0 20px 30px;
+  max-width: 840px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .messages-area {
+    padding-top: 70px; /* Space for mobile toggle */
+  }
+}

@@ -1,0 +1,72 @@
+.hitl-banner {
+  background: rgba(245, 158, 11, 0.05); /* Tinted warning bg */
+  backdrop-filter: var(--panel-blur);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.1);
+}
+
+.hitl-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hitl-icon {
+  font-size: 20px;
+}
+
+.hitl-title {
+  color: #fbbf24;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.hitl-prompt {
+  color: var(--text-white);
+  font-size: 14px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.hitl-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.hitl-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+}
+
+.hitl-btn:hover {
+  transform: scale(1.05);
+}
+
+.hitl-approve {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.hitl-reject {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.hitl-reject:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
