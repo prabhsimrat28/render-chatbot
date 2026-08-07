@@ -168,7 +168,7 @@ def get_weather(location: str) -> dict:
 
 @tool
 def purchase_stock(symbol: str, quantity: int) -> dict:
-    """"
+    """
     Simulate purchasing a stock. This is a mock function and does not perform real transactions.
     HUMAN-IN-THE-LOOP (HITL):
     Before confirming the purchase, the tool will interrupt and wait for the human decision (Yes/Anything else).
@@ -183,7 +183,7 @@ def purchase_stock(symbol: str, quantity: int) -> dict:
 
 @tool
 def sell_stock(symbol: str, quantity: int) -> dict:
-    """"
+    """
     Simulate selling a stock. This is a mock function and does not perform real transactions.
     HUMAN-IN-THE-LOOP (HITL):
     Before confirming the sale, the tool will interrupt and wait for the human decision (Yes/Anything else).
