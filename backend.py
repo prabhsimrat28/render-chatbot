@@ -23,10 +23,10 @@ from langgraph.types import interrupt,Command
 load_dotenv()
 
 llm = ChatOpenAI(
-    model="openai/gpt-oss-120b",
-    api_key=os.getenv("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1",
-    temperature=0.7,
+    model="openai/gpt-oss-20b:free",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+    temperature=0.7
 )
 
 embeddings = JinaEmbeddings(api_key=os.getenv("JINA_API_KEY"))
