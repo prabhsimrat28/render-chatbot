@@ -48,13 +48,24 @@ export default function ChatWindow({
             )}
             
             {currentTool && (
-              <div className="tool-pill-container">
+              <div className="tool-indicator">
+                <div className="indicator-avatar">🤖</div>
                 <div className="tool-pill">
-                  <span className="tool-icon">🔧</span>
-                  Using {currentTool}...
+                  <span className="tool-spinner"></span>
+                  Using {currentTool}…
                 </div>
               </div>
             )}
+
+            {isStreaming && !streamingContent && !currentTool && (
+              <div className="typing-indicator-row">
+                <div className="indicator-avatar">🤖</div>
+                <div className="typing-dots">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
         )}

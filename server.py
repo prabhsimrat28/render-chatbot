@@ -99,8 +99,14 @@ async def chat(req: ChatRequest):
                 if isinstance(chunk, ToolMessage):
                     tool_name = getattr(chunk, "name", "tool")
                     yield {"event": "tool_use", "data": json.dumps({"tool": tool_name})}
-                if isinstance(chunk, AIMessage) and chunk.content:
-                    yield {"event": "token", "data": json.dumps({"content": chunk.content})}
+                if isinstance(chunk, AIMessage):
+                    tccs = getattr(chunk, "tool_call_chunks", None)
+                    if tccs:
+                        for tc in tccs:
+                            if tc.get("name"):
+                                yield {"event": "tool_start", "data": json.dumps({"tool": tc["name"]})}
+                    if chunk.content:
+                        yield {"event": "token", "data": json.dumps({"content": chunk.content})}
 
             interrupt = get_pending_interrupt(req.thread_id)
             if interrupt:
@@ -131,8 +137,14 @@ async def resume_chat(req: ResumeRequest):
                 if isinstance(chunk, ToolMessage):
                     tool_name = getattr(chunk, "name", "tool")
                     yield {"event": "tool_use", "data": json.dumps({"tool": tool_name})}
-                if isinstance(chunk, AIMessage) and chunk.content:
-                    yield {"event": "token", "data": json.dumps({"content": chunk.content})}
+                if isinstance(chunk, AIMessage):
+                    tccs = getattr(chunk, "tool_call_chunks", None)
+                    if tccs:
+                        for tc in tccs:
+                            if tc.get("name"):
+                                yield {"event": "tool_start", "data": json.dumps({"tool": tc["name"]})}
+                    if chunk.content:
+                        yield {"event": "token", "data": json.dumps({"content": chunk.content})}
 
             interrupt = get_pending_interrupt(req.thread_id)
             if interrupt:

@@ -54,22 +54,88 @@
   justify-content: flex-start;
   margin-top: -12px;
   margin-bottom: 12px;
-  padding-left: 48px; /* Align with assistant message content */
+  padding-left: 48px;
+}
+
+.indicator-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.typing-indicator-row,
+.tool-indicator {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  animation: fadeIn var(--transition-smooth);
+}
+
+.typing-dots {
+  display: flex;
+  gap: 6px;
+  padding: 14px 20px;
+  background: var(--panel-bg);
+  backdrop-filter: var(--panel-blur);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  border-bottom-left-radius: 4px;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-8px); opacity: 1; }
 }
 
 .tool-pill {
-  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite linear, fadeIn var(--transition-smooth);
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-  font-size: 13px;
-  color: var(--text-gray);
   display: flex;
   align-items: center;
-  gap: 6px;
-  border: 1px solid var(--border-color);
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-white);
   backdrop-filter: var(--panel-blur);
+  animation: fadeIn var(--transition-smooth);
+}
+
+.tool-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(124, 58, 237, 0.3);
+  border-top-color: var(--accent-purple);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .tool-icon {
@@ -86,6 +152,6 @@
 
 @media (max-width: 768px) {
   .messages-area {
-    padding-top: 70px; /* Space for mobile toggle */
+    padding-top: 70px;
   }
 }

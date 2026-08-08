@@ -36,6 +36,8 @@ export async function processSSEStream(response, callbacks) {
               onToken(data.content);
             } else if (currentEvent === 'tool_use' && onToolUse) {
               onToolUse(data.tool);
+            } else if (currentEvent === 'tool_start' && onToolUse) {
+              onToolUse(data.tool);
             } else if (currentEvent === 'interrupt' && onInterrupt) {
               onInterrupt(data);
             } else if (currentEvent === 'done' && onDone) {
