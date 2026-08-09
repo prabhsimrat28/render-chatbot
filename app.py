@@ -310,8 +310,130 @@ st.set_page_config(
     page_icon="🤖"
 )
 
-# Display the main application title
-st.title("Agentic Chatbot with LangGraph")
+CUSTOM_CSS = """
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html, body, .stApp {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(160deg, #0a0a1a 0%, #111128 50%, #0d0d24 100%);
+}
+
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+[data-testid="stBottomBlockContainer"] {
+    background: linear-gradient(to top, rgba(10,10,26,0.97) 70%, transparent) !important;
+}
+
+section[data-testid="stSidebar"] {
+    background: rgba(10, 10, 28, 0.97) !important;
+    border-right: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+[data-testid="stSidebarContent"] .stButton > button {
+    width: 100%;
+    text-align: left;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    background: rgba(255,255,255,0.02) !important;
+    color: #8b8fa3 !important;
+    border-radius: 10px !important;
+    padding: 0.6rem 1rem !important;
+    font-size: 0.84rem;
+    transition: all 0.25s ease;
+}
+
+[data-testid="stSidebarContent"] .stButton > button:hover {
+    background: rgba(255,255,255,0.06) !important;
+    border-color: rgba(124,58,237,0.2) !important;
+    color: #e0e0e8 !important;
+    transform: translateX(2px);
+}
+
+[data-testid="stSidebarContent"] .stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #7c3aed, #3b82f6) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    margin-bottom: 0.8rem !important;
+    padding: 0.7rem 1rem !important;
+    font-size: 0.9rem;
+}
+
+[data-testid="stSidebarContent"] .stButton > button[kind="primary"]:hover {
+    box-shadow: 0 6px 20px rgba(124,58,237,0.35);
+    transform: translateY(-2px) translateX(0);
+}
+
+[data-testid="stChatMessage"] {
+    background: rgba(255,255,255,0.02) !important;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 14px !important;
+    padding: 1rem 1.25rem !important;
+    animation: msgAppear 0.3s ease-out;
+}
+
+h1 {
+    background: linear-gradient(135deg, #e8e8f0 20%, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700 !important;
+    font-size: 1.75rem !important;
+}
+
+[data-testid="stSidebarContent"] h1 {
+    font-size: 1.05rem !important;
+    background: linear-gradient(to right, #d1d5db, #6b7280);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.stMainBlockContainer .stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 600;
+}
+
+.stMainBlockContainer .stButton > button[kind="primary"]:hover {
+    box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+    transform: translateY(-1px);
+}
+
+[data-testid="stAlert"] {
+    background: rgba(245,158,11,0.06) !important;
+    border: 1px solid rgba(245,158,11,0.15);
+    border-radius: 12px;
+}
+
+[data-testid="stStatusWidget"] {
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+[data-testid="stChatInput"] textarea {
+    border-radius: 12px !important;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+@keyframes msgAppear {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+"""
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+st.title("🤖 Agentic Chatbot")
 
 
 # Create message_history when the app runs for the first time
@@ -355,11 +477,11 @@ sync_pending_interrupt(
 # ========================= Sidebar threading feature =========================
 
 # Display the sidebar title
-st.sidebar.title("My Conversations")
+st.sidebar.title("💬 Conversations")
 
 
 # Create a button for starting a new conversation
-if st.sidebar.button("New Chat"):
+if st.sidebar.button("➕ New Chat", type="primary"):
 
     # Reset the current chat and create a new thread
     reset_chat()
@@ -374,7 +496,7 @@ for thread_id in st.session_state["chat_threads"][::-1]:
 
     # Create one sidebar button for every conversation
     if st.sidebar.button(
-        str(thread_id),
+        f"💬 {thread_id[:8]}…",
         key=thread_id
     ):
 
@@ -432,7 +554,7 @@ for message in st.session_state["message_history"]:
     with st.chat_message(message["role"]):
 
         # Display the message content
-        st.text(message["content"])
+        st.markdown(message["content"])
 
 
 # ========================= HITL approval interface =========================
