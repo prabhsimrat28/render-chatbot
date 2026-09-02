@@ -15,7 +15,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from JinaEmbeddings import JinaEmbeddings
-import os 
+import os
+from langsmith import traceable
 from typing import Any
 from langgraph.types import interrupt, Command
 
@@ -36,6 +37,7 @@ llm = ChatOpenAI(
 embeddings = JinaEmbeddings(api_key=os.getenv("JINA_API_KEY"))
 
 
+@traceable(name="rag_document_ingestion")
 def ingest_rag_document(file_path):
     DB_PATH = "faiss_db"
     loader = PyPDFLoader(file_path)
@@ -46,6 +48,7 @@ def ingest_rag_document(file_path):
     vector_store.save_local(DB_PATH)
 
 
+@traceable(name="faiss_load_retriever")
 def get_retriever():
     DB_PATH = "faiss_db"
     vector_store = FAISS.load_local(
@@ -63,6 +66,12 @@ def get_retriever():
 
 # rag tool
 
+@traceable(name="faiss_similarity_search")
+def _retrieve_chunks(retriever, query):
+    """Traced wrapper around the FAISS similarity search."""
+    return retriever.invoke(query)
+
+
 @tool
 def rag_tool(query: str) -> str:
     """
@@ -75,7 +84,7 @@ def rag_tool(query: str) -> str:
         query: The question or search query used to retrieve PDF content.
     """
     retriever = get_retriever()
-    documents = retriever.invoke(query)
+    documents = _retrieve_chunks(retriever, query)
 
     if not documents:
         return "No relevant information was found in the PDF."
