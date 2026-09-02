@@ -1,34 +1,38 @@
 from langgraph.graph import StateGraph, START, END
 from typing import TypedDict, Annotated
-from langchain_core.messages import BaseMessage, SystemMessage
-from langchain_openai import ChatOpenAI
-from langgraph.graph.message import add_messages
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from dotenv import load_dotenv
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.graph.message import add_messages
+import sqlite3
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_tavily import TavilySearch
 from langchain_core.tools import tool
-from typing import Any
-import requests
 import math
-import os
-import sqlite3
+import requests
+from langchain_openai import ChatOpenAI
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from JinaEmbeddings import JinaEmbeddings
 from langchain_community.vectorstores import FAISS
-from langgraph.types import interrupt,Command
+from JinaEmbeddings import JinaEmbeddings
+import os 
+from typing import Any
+from langgraph.types import interrupt, Command
 
 
 load_dotenv()
 
+
+# LLM 
 llm = ChatOpenAI(
-    model="openai/gpt-oss-20b:free",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
-    base_url="https://openrouter.ai/api/v1",
-    temperature=0.7
+    model="openai/gpt-oss-120b",
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+    temperature=0.7,
 )
 
+
+# Embeddings model
 embeddings = JinaEmbeddings(api_key=os.getenv("JINA_API_KEY"))
 
 
@@ -220,8 +224,9 @@ def chat_node(state: ChatState):
             "- Use `calculator` for mathematical calculations. Do not calculate complex "
             "expressions manually when the calculator is available.\n"
             "- Use `get_stock_price` when the user asks for the current price of a stock.\n"
+            "- Use `purchase_stock` when the user wants to purchase a stock.\n"
             "- Use `sell_stock` when the user wants to sell stocks.\n"
-            "- Use `get_current_weather` when the user asks about current weather for a location.\n\n"
+            "- Use `get_weather` when the user asks about current weather for a location.\n\n"
 
             "Answer general questions directly when no tool is required. "
             "Do not invent information from the uploaded document. "
@@ -236,31 +241,36 @@ def chat_node(state: ChatState):
     response = llm_with_tools.invoke(messages)
     return {"messages": [response]}
 
-tool_node = ToolNode(tools)  # Executes tool calls
 
 
+# Nodes 2 - tool node
+tool_node = ToolNode(tools)
+
+
+
+# Checkpointer
 conn = sqlite3.connect(database="chatbot.db", check_same_thread=False)
 checkpoint = SqliteSaver(conn)
 
 
 
-# graph structure
+# graph
 graph = StateGraph(ChatState)
-graph.add_node("chat_node", chat_node)
-graph.add_node("tools", tool_node)
 
+# add nodes
+graph.add_node('chat_node', chat_node)
+graph.add_node('tools', tool_node)
 
-graph.add_edge(START, "chat_node")
-
-# If the LLM asked for a tool, go to ToolNode; else finish
-graph.add_conditional_edges("chat_node", tools_condition)
-
-graph.add_edge("tools", "chat_node")  
+#add edges
+graph.add_edge(START, 'chat_node')
+graph.add_conditional_edges("chat_node",tools_condition)
+graph.add_edge('tools', 'chat_node')
 
 chatbot = graph.compile(checkpointer=checkpoint)
 
 
 
+# Helper functions for Streamlit frontend
 def get_all_threads():
     all_threads = set()
     for ckpt in checkpoint.list(None):
