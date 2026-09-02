@@ -6,6 +6,6 @@ textColor = "#f0f0f5"
 font = "sans serif"
 
 [server]
-headless = true
+fileWatcherType = "none"
 port = 10000
 address = "0.0.0.0"
